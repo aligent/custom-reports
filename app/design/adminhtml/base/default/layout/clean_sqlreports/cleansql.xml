@@ -59,5 +59,9 @@
         <update handle="adminhtml_adminhtml_report_viewtable"/>
     </adminhtml_adminhtml_report_exportcsv>
 
+    <adminhtml_adminhtml_report_exportxml>
+        <update handle="adminhtml_adminhtml_report_viewtable"/>
+    </adminhtml_adminhtml_report_exportxml>
+
 </layout>
 

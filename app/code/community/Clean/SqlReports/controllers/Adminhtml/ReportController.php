@@ -2,6 +2,8 @@
 
 class Clean_SqlReports_Adminhtml_ReportController extends Mage_Adminhtml_Controller_Action
 {
+
+    const SQLREPORTS_XML_EXPORT_EVENT = 'sqlreports_xml_export';
     protected $_report;
 
     public function preDispatch()
@@ -104,6 +106,43 @@ class Clean_SqlReports_Adminhtml_ReportController extends Mage_Adminhtml_Control
             $grid->getCsvFile(),
             'text/csv'
         );
+    }
+
+    /**
+     * Export grid to XML format. Throws event to allow third-party modules to generate XML output based on their specific requirements
+     */
+    public function exportXmlAction()
+    {
+        Mage::register('current_report', $this->_getReport());
+        $this->loadLayout();
+
+        /** @var $oGrid Mage_Adminhtml_Block_Widget_Grid */
+        $oGrid = $this->getLayout()->getBlock('report.view.grid');
+        if(!$oGrid instanceof Mage_Adminhtml_Block_Widget_Grid) {
+            $this->_forward('noroute');
+            return;
+        }
+
+        $vFileName = strtolower(str_replace(' ', '_', $this->_getReport()->getTitle())) . '_' . time() . '.xml';
+        $oResult = new Varien_Object();
+        Mage::dispatchEvent(self::SQLREPORTS_XML_EXPORT_EVENT, array(
+            'grid'=>$oGrid,
+            'filename' => $vFileName,
+            'result' => $oResult)
+        );
+
+        $vContent = $oResult->getExportFileContents();
+
+        if($vContent){
+            $this->_prepareDownloadResponse(
+                $vFileName,
+                $vContent,
+                'text/xml'
+            );
+        }
+        else{
+            echo 'not implemented';
+        }
     }
 
     /**

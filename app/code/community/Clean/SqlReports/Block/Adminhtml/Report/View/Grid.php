@@ -12,6 +12,7 @@ class Clean_SqlReports_Block_Adminhtml_Report_View_Grid extends Mage_Adminhtml_B
         $this->setDefaultDir('ASC');
         $this->setSaveParametersInSession(true);
         $this->addExportType('*/*/exportCsv', $this->__('CSV'));
+        $this->addExportType('*/*/exportXml', $this->__('XML'));
     }
 
     protected function _prepareLayout()
@@ -60,7 +61,7 @@ class Clean_SqlReports_Block_Adminhtml_Report_View_Grid extends Mage_Adminhtml_B
         try {
             parent::_prepareCollection();
         } catch (Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('An error occured rendering the grid: ' . $e->getMessage()));
+            Mage::getSingleton('adminhtml/session')->addError($this->__('An error occurred rendering the grid: ' . $e->getMessage()));
             Mage::logException($e);
             //abort rendering grid and replace collection with an empty one
             $this->setCollection(new Varien_Data_Collection());
@@ -75,7 +76,7 @@ class Clean_SqlReports_Block_Adminhtml_Report_View_Grid extends Mage_Adminhtml_B
             $collection->setPageSize(1);
             $collection->load();
         } catch (Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('An error occured rendering the grid: ' . $e->getMessage()));
+            Mage::getSingleton('adminhtml/session')->addError($this->__('An error occurred rendering the grid: ' . $e->getMessage()));
             Mage::logException($e);
             $collection = new Varien_Data_Collection();
         }
