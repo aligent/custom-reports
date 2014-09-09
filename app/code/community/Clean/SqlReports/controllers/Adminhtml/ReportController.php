@@ -122,27 +122,33 @@ class Clean_SqlReports_Adminhtml_ReportController extends Mage_Adminhtml_Control
             $this->_forward('noroute');
             return;
         }
-
         $vFileName = strtolower(str_replace(' ', '_', $this->_getReport()->getTitle())) . '_' . time() . '.xml';
+        $vXml = $oGrid->getXml();
         $oResult = new Varien_Object();
+        $oResult->setData('xml', $vXml);
         Mage::dispatchEvent(self::SQLREPORTS_XML_EXPORT_EVENT, array(
-            'grid'=>$oGrid,
+            'collection'=> $oGrid->getCollection(),
             'filename' => $vFileName,
             'result' => $oResult)
         );
 
-        $vContent = $oResult->getExportFileContents();
+        $vFilepath = $oResult->getFilename();
 
-        if($vContent){
-            $this->_prepareDownloadResponse(
-                $vFileName,
-                $vContent,
-                'text/xml'
+        if($vFilepath){
+            $aContent = array(
+                'type' => 'filename',
+                'value' => $vFilepath
             );
         }
         else{
-            echo 'not implemented';
+            $aContent = $vXml;
         }
+
+        $this->_prepareDownloadResponse(
+            $vFileName,
+            $aContent,
+            'text/xml'
+        );
     }
 
     /**

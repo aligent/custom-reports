@@ -3,6 +3,11 @@
 /** @var $this Mage_Core_Model_Resource_Setup */
 $this->startSetup();
 
+if($this->getConnection()->isTableExists($this->getTable('cleansql/report'))){
+    Mage::log('table already exists');
+    return $this;
+};
+
 $table = $this->getConnection()->newTable($this->getTable('cleansql/report'));
 $table->addColumn(
     'report_id',
