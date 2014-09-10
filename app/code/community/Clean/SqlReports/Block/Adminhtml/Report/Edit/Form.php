@@ -74,5 +74,10 @@ class Clean_SqlReports_Block_Adminhtml_Report_Edit_Form extends Mage_Adminhtml_B
             'label'     => Mage::helper('core')->__('Grid Configuration'),
             'style'     => 'width: 640px; height: 200px;'
         ));
+        $fieldset->addField('report_code', 'text', array(
+            'name'      => 'report[report_code]',
+            'label'     => Mage::helper('core')->__('Report Code'),
+            'readonly'  => true
+        ));
     }
 }
